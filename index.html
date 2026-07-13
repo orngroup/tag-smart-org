@@ -319,6 +319,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(
   </div>
   <input class="search-box" id="search-box" placeholder="&#128269; Search name, role, dept..." oninput="render()">
   <button class="tog" id="edit-toggle-btn" onclick="toggleEditMode()" style="margin-left:auto;border-color:var(--green);color:var(--green)">&#9998; Edit Salaries</button>
+  <button class="tog" onclick="showResScenarioEditor()" style="border-color:var(--blue);color:var(--blue)">&#127919; Res Targets</button>
 </div>
 
 <div class="main">
@@ -395,6 +396,23 @@ const revTargets={
 'John Gunning':{rev:5140000,label:'47x return on cost — RISK',otePct:10,flag:'RISK',metric:'Cruise Planners $3,020,000 + WESTA + MAST + AAA + Opulence',how:'John owns the mid-tier consortia bloc — Cruise Planners ($3.02M target at 21% activation), WESTA, MAST ($1.46M at 20% activation), AAA, plus the 246 Opulence luxury advisors. Combined target is $5.14M. CRITICAL: John is currently marked redundant with no named account successor.',note:'Revenue risk flag: if Johns departure is confirmed without a handover plan, TAG loses ownership of its second-largest revenue bloc. The Cruise Planners relationship alone ($3.02M) took years to build.',breakdown:[{lbl:'Cruise Planners',val:'$3,020,000',desc:'21% activation rate — highest in the book. Top 200 CP Land advisors targeted. $33,250 marketing budget.'},{lbl:'MAST',val:'$1,460,000',desc:'20% activation. $21,900 budget. Strong existing relationship.'},{lbl:'WESTA',val:'$400,000',desc:'$17,450 budget. Western States Travel Agents — regionally concentrated.'},{lbl:'AAA',val:'$160,000',desc:'$14,250 budget. AAA Washington chapter focus.'},{lbl:'Opulence and Others',val:'$100,000',desc:'246 luxury advisor segment. High ABV potential.'}],dependsOn:['Kerryn Collins','Michael Brown'],dependsNote:'CRITICAL RISK: John is marked redundant. His $5.14M revenue bloc currently has no named owner. Recommendation: redistribute before departure — Cruise Planners and MAST to Michael Brown, WESTA and AAA to a new hire or Janie Hall. A 3-month handover with Michael shadowing is strongly recommended.'},
 'Jackie Fontanez':{rev:5400000,label:'42x return on floor output',otePct:10,flag:'',metric:'In-house consumer sales floor — 20 agents annualised at $450,000 per month',how:'Jackie manages TAGs in-house consumer sales operation — 20 agents handling inbound phone and web enquiries converting directly to bookings. At the current run-rate of $450,000 per month (104 bookings x $4,336 ABV) annualised, the floor contributes approximately $5.4M per year. This is separate from and additive to the advisor and consortia revenue managed by the external sales team.',note:'Jackies $128,039 total cost against a $5.4M floor contribution gives a 42x return ratio. Her leverage comes entirely through managing the 20 agents below her. Quality of supervision, incentive structure and agent retention directly determines this number.',breakdown:[{lbl:'Inbound Phone Leads',val:'$3,120,000',desc:'312 leads per month at 15% conversion = 47 bookings x $4,400 avg x 12 months'},{lbl:'Web Enquiry Form',val:'$1,560,000',desc:'218 leads per month at 12% conversion = 26 bookings x $5,000 avg x 12 months'},{lbl:'Referral and Repeat Client',val:'$720,000',desc:'74 leads per month at 12% conversion = 9 bookings x $8,000 avg x 12 months — highest ABV channel'}],dependsOn:[],dependsNote:''},
 'Jonna Jackson':{rev:500000,label:'pipeline influence',otePct:10,flag:'',metric:'Marketing pipeline contribution — estimated from campaign influence',how:'As Acting Marketing Director, Jonnas revenue attribution is indirect. Her campaigns generate awareness and lead flow feeding the sales and in-house floors. At 9 campaigns deployed in Apr to Jun 2026 across NZ, Africa, Thailand, UAE, South Korea, Portugal and multi-destination, an estimated 15% of inbound web enquiries are marketing-sourced, worth approximately $500,000 in bookings.',note:'At $130,380 total cost against an estimated $500,000 influence, ROI is 3.8x — relatively low but reflects the early-stage marketing operation. Attribution will improve significantly once Zoho CRM is live with proper UTM tracking.',breakdown:[{lbl:'Trade Campaign Attribution',val:'$300,000',desc:'7 trade campaigns driving advisor engagement. Estimated 300 advisor re-engagements at 3% booking rate x $10,000 avg.'},{lbl:'Consumer Campaign Attribution',val:'$200,000',desc:'2 consumer campaigns (NZ, Portugal). Estimated 120 inbound enquiries x 18% conversion x $8,500 avg.'}],dependsOn:['Jeff Adam','Michael Brown'],dependsNote:'Jonnas campaigns feed Jeffs webinar audience and Michaels advisor activation numbers. A coordinated campaign calendar between Marketing and Sales is essential and should be unified in Zoho Campaigns.'},
+'Adam Dela Roche':{rev:2570000,label:'50.9x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Oceania is TAGs largest destination category at approximately $18M of the $30M FY26 target. With 7 active Oceania res agents, each carries a throughput accountability of $2,570,000 per year — approximately 180 confirmed bookings at an average of $14,300 per file. Adam covers Australia, New Zealand, Fiji and the South Pacific.',note:'At $50,492 total cost against a $2.57M throughput target, Adam delivers a 50.9x return ratio — among the highest in the organisation. Res agents are the revenue engine that converts sales activity into confirmed bookings. Their performance targets have historically not been visible — this changes with the Nexus integration and Zoho CRM connection.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'Target: $18M Oceania total divided equally across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'Average 15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$14,300',desc:'Mix of Oceania product — Australia self-drive, NZ luxury lodges, Fiji resorts'},{lbl:'Upsell Rate Target',val:'35%',desc:'Travel insurance, room upgrades, excursion packages'},{lbl:'Quote-to-Book Conversion',val:'68%',desc:'Target conversion from quote issued to confirmed booking'},{lbl:'Balance Clearance',val:'90%',desc:'Files with full payment cleared 30+ days before travel date'},{lbl:'Res Error Rate',val:'<2%',desc:'Amendments required due to res team error — measured monthly'}],dependsOn:['Lisa Tenerelli-Escover','Cherice Harrell'],dependsNote:'Adams throughput target depends on a steady flow of qualified quotes from the sales team (Michael Brown for TLN and Signature advisors) and timely product availability from the operations team.'},
+'Allison Hogan':{rev:2570000,label:'36.2x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Allison is one of seven active Oceania res agents each carrying a $2,570,000 annual throughput target. Her portfolio covers Australia, New Zealand, Fiji and the broader South Pacific. At $65,000 base she is one of the higher-paid Oceania agents — her experience justifies this but her ABV and conversion metrics should reflect that seniority.',note:'Allison is the highest-paid Oceania agent at $65,000 base. Her throughput target is the same as junior agents at this stage — as performance data becomes available via Nexus, her personal ABV and conversion metrics should be benchmarked against the team to justify the salary differential.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'Target: $18M Oceania total divided across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'Average 15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$14,300',desc:'Senior agent — expected to push premium Oceania product'},{lbl:'Upsell Rate Target',val:'38%',desc:'Higher upsell expectation commensurate with seniority and salary'},{lbl:'Quote-to-Book Conversion',val:'70%',desc:'Above-average conversion expected at this experience level'},{lbl:'Balance Clearance',val:'90%',desc:'Files with full payment cleared 30+ days before travel'},{lbl:'Res Error Rate',val:'<1.5%',desc:'Senior standard — lower error tolerance'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:'Allisons files are managed within Lisa Tenerelli-Escovers team. Quality oversight, product training and workflow management from Lisa directly affects Allisons ability to hit conversion and error targets.'},
+'Beth Grier':{rev:2570000,label:'48.1x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Beth is one of seven active Oceania res agents. Her base salary of $48,750 puts her in the mid-range of the Oceania team. Target framework matches all Oceania agents at this stage — individual performance data from Nexus should be used to differentiate targets in FY27.',note:'Long Beach, CA based. At $53,430 total cost against a $2.57M target, Beth delivers a 48x return. Solid mid-range agent — Nexus data will tell us whether her ABV and conversion are above or below the team average.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'$18M Oceania target across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$14,300',desc:'Standard Oceania product mix'},{lbl:'Upsell Rate Target',val:'35%',desc:'Insurance, upgrades, excursions'},{lbl:'Quote-to-Book Conversion',val:'68%',desc:'Target from quote to confirmed booking'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<2%',desc:'Monthly measure'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:''},
+'Christen McGlynn':{rev:1500000,label:'26.3x return on cost',otePct:5,flag:'',metric:'Res Support throughput — $1,500,000 / 120 bookings across all regions',how:'Christen provides reservations support across all regions rather than owning a specific destination portfolio. Her throughput target is set at $1.5M — lower than a dedicated regional agent but she should carry a revenue accountability target. The support role is critical during peak periods and volume surges across the Oceania and Africa teams.',note:'The support role is often invisible in revenue terms — this target framework makes Christens contribution visible and measurable for the first time. At $56,940 total cost against a $1.5M target, she delivers 26x. If Nexus shows her personal file count is higher, the target should be revised upward.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$1,500,000',desc:'Blended cross-region support target'},{lbl:'Booking Count Target',val:'120 files/year',desc:'10 confirmed bookings per month across all regions'},{lbl:'Average Booking Value',val:'$12,500',desc:'Blended ABV across mixed regional portfolio'},{lbl:'Upsell Rate Target',val:'25%',desc:'Support role — lower upsell expectation'},{lbl:'Quote-to-Book Conversion',val:'60%',desc:'Support conversion target'},{lbl:'Balance Clearance',val:'85%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<2%',desc:'Monthly measure'}],dependsOn:['Lisa Tenerelli-Escover','Cherice Harrell'],dependsNote:'Christen reports into both Res Managers. Her workload is directed by the team managers and varies by season — Nexus data should track her personal file count and throughput monthly.'},
+'Dina Holguin':{rev:2000000,label:'39.6x return on cost',otePct:5,flag:'',metric:'Africa res throughput — $2,000,000 / 110 bookings / $18,200 ABV',how:'Africa is TAGs premium segment with the highest average booking value at $18,200 per file. With 3 active Africa agents (Dina, Richard and Rowan — Nora is redundant), each carries a $2M annual throughput target across approximately 110 bookings. Africa product includes Botswana Okavango Delta, Tanzania Serengeti, Kenya Masai Mara and South Africa — itineraries typically run $15,000 to $25,000 per couple.',note:'At $50,460 total cost against a $2M target, Dina delivers a 39.6x return. Africa agents are the highest-value per-booking processors in the res team and should be recognised as such in compensation reviews.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,000,000',desc:'$6M Africa total across 3 active agents'},{lbl:'Booking Count Target',val:'110 files/year',desc:'Approx 9 confirmed bookings per month — fewer but higher value'},{lbl:'Average Booking Value',val:'$18,200',desc:'Premium safari and lodge product — highest ABV in the res team'},{lbl:'Upsell Rate Target',val:'40%',desc:'Conservation levies, private villa upgrades, charter flights — high upsell opportunity'},{lbl:'Quote-to-Book Conversion',val:'62%',desc:'Africa decisions take longer — lower conversion rate than Oceania is expected'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel — critical for operator pre-payments'},{lbl:'Res Error Rate',val:'<2%',desc:'Africa itineraries are complex — monthly error measure is essential'}],dependsOn:['Cherice Harrell'],dependsNote:'Dinas Africa files require accurate and timely operator confirmations. The reconfirmation programme (forward bookings review) currently underway in the UK is directly relevant — any supplier issues flagged by Ajay and Clinton reduce Dinas amendment workload significantly.'},
+'Jannie Lopez':{rev:2570000,label:'46.9x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Jannie is one of seven active Oceania res agents based in Cedar City, UT. Target framework consistent with all Oceania agents. Individual performance differentiation will come from Nexus reporting once integration is live.',note:'At $54,780 total cost against a $2.57M target, Jannie delivers a 46.9x return. Remote-based in Utah — all communication and file management is via Nexus and Zoho CRM once live.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'$18M Oceania target across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$14,300',desc:'Standard Oceania product mix'},{lbl:'Upsell Rate Target',val:'35%',desc:'Insurance, upgrades, excursions'},{lbl:'Quote-to-Book Conversion',val:'68%',desc:'Target from quote to confirmed booking'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<2%',desc:'Monthly measure'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:''},
+'Kelly Taylor':{rev:2570000,label:'45.8x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Kelly is the only Australia-based res agent, operating from South Australia. No employer tax applies (Australian payroll). Her $56,114 salary reflects Australian market rates. Target framework is identical to US-based Oceania agents — her proximity to the destination gives her a product knowledge advantage that should translate into higher conversion and lower error rates.',note:'Kellys Australia base is a genuine competitive advantage for Oceania product quality. Her targets are set slightly higher than average on conversion and error rate to reflect this. Total cost of $56,114 (no employer tax, no medical) against a $2.57M target gives a 45.8x return.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'$18M Oceania target across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$14,300',desc:'Australia-based — strong product knowledge advantage'},{lbl:'Upsell Rate Target',val:'38%',desc:'Higher upsell expectation given destination proximity and expertise'},{lbl:'Quote-to-Book Conversion',val:'72%',desc:'Above-average conversion expected from proximity advantage'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<1.5%',desc:'Lower error target — local knowledge reduces itinerary errors'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:'Kelly works across the international time zone boundary — file handover protocols between Australia and US business hours should be documented in the Zoho CRM workflow.'},
+'Kim Faucette':{rev:1000000,label:'Quality control — enables full throughput',otePct:5,flag:'',metric:'Docs/QC — quality oversight enabling $30M total throughput',how:'Kims Docs/QC role is a quality assurance function — she reviews documentation, checks booking accuracy and manages the QC process across all res files. Her revenue accountability is indirect: without robust QC, error rates rise, client complaints increase and the cost of re-work erodes margin. Her $1M target reflects the minimum revenue impact her QC role protects each month.',note:'At $87,154 total cost, Kim is the highest-paid non-manager in the res team. Her Docs/QC role justifies this through the error cost protection she provides. As the most senior operational staff member in the res function, her institutional knowledge is high — she should be involved in the Nexus integration and Zoho training design.',breakdown:[{lbl:'Quality Control Revenue Protection',val:'$1,000,000+',desc:'At 2% error rate on $30M throughput, errors cost $600K annually. QC reduces this to <0.5%, saving $450K+ per year.'},{lbl:'Documentation Accuracy',val:'98%+',desc:'Target: 98% of all booking documents issued correctly first time'},{lbl:'QC Turnaround Time',val:'<24 hours',desc:'All files QCd within 24 hours of booking confirmation'},{lbl:'Complaint Rate',val:'<1%',desc:'Client complaints attributable to documentation or booking errors'}],dependsOn:['Lisa Tenerelli-Escover','Cherice Harrell'],dependsNote:'Kims QC function covers all res agents. Her error rate metrics are the single best measure of overall res team performance quality. Her data should feed into the Nexus integration reporting.'},
+'Kristin Vincent':{rev:3000000,label:'45.7x return on cost',otePct:5,flag:'',metric:'Europe & Oceania res throughput — $3,000,000 / 200 bookings / $15,000 ABV',how:'Kristin covers both Europe and Oceania product — a dual-region portfolio that carries the highest individual throughput target in the res team at $3M. Europe bookings carry a slightly lower ABV than Africa but higher volume than Oceania. Her target reflects the breadth of the role.',note:'At $65,580 total cost against a $3M target, Kristin delivers a 45.7x return. Her dual-region portfolio is the most complex in the res team and her salary reflects this. The highest throughput target in the team — she is a key person.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$3,000,000',desc:'Dual-region portfolio — Europe plus Oceania'},{lbl:'Booking Count Target',val:'200 files/year',desc:'Approx 17 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$15,000',desc:'Blended Europe and Oceania ABV'},{lbl:'Upsell Rate Target',val:'38%',desc:'Insurance, add-ons, upgrades across both regions'},{lbl:'Quote-to-Book Conversion',val:'65%',desc:'Dual-region conversion target'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<2%',desc:'Monthly measure — dual region complexity requires care'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:'The Europe product line is growing. Kristins dual-region coverage means she handles the largest volume of file types in the team. Her workload should be monitored as Europe revenue grows — she may need additional support at peak.'},
+'Laura Bugg':{rev:2570000,label:'51.4x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Laura is a Brisbane-based Oceania res agent with no employer tax or medical costs — making her the most cost-efficient agent in the team on a cost-to-throughput basis at 51.4x. Her local knowledge of Australia and Queensland in particular is a strong product advantage.',note:'Laura is the best cost-efficiency ratio in the entire organisation at 51.4x. Total cost $50,000 (no tax, no medical) against $2.57M target. Her Brisbane base is a direct asset for Oceania product quality. Should be considered for senior role if she performs above benchmark.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'$18M Oceania target across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$14,300',desc:'Australia-based — product knowledge advantage'},{lbl:'Upsell Rate Target',val:'38%',desc:'Higher upsell expectation given proximity to destination'},{lbl:'Quote-to-Book Conversion',val:'70%',desc:'Above-average conversion expected'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<1.5%',desc:'Lower error target — local knowledge reduces itinerary errors'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:'Laura works out of Brisbane across the international time zone boundary. Same time zone protocol as Kelly Taylor applies.'},
+'Richard Schwartzel':{rev:2000000,label:'33.2x return on cost',otePct:5,flag:'',metric:'Africa res throughput — $2,000,000 / 110 bookings / $18,200 ABV',how:'Richard is one of three active Africa res agents (Nora Gregorian is redundant) based in Tucson, AZ. Africa carries the highest ABV in the res team at $18,200 per file — each confirmed booking is worth significantly more than Oceania or Asia. Richards target of $2M reflects the $6M Africa total divided across 3 active agents.',note:'At $60,175 total cost against a $2M target, Richard delivers a 33.2x return. The Africa team is the highest-value processing team in the business. Note: if Nora Gregorians redundancy is confirmed without replacement, the remaining 3 agents each absorb additional volume — targets would need to increase to $2.5M each to cover the $6M Africa total.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,000,000',desc:'$6M Africa total across 3 active agents'},{lbl:'Booking Count Target',val:'110 files/year',desc:'Approx 9 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$18,200',desc:'Premium safari product — highest ABV in res team'},{lbl:'Upsell Rate Target',val:'40%',desc:'Conservation levies, charter flights, private upgrades'},{lbl:'Quote-to-Book Conversion',val:'62%',desc:'Africa decisions take longer — expected lower conversion'},{lbl:'Balance Clearance',val:'90%',desc:'Operator pre-payments require early balance clearance'},{lbl:'Res Error Rate',val:'<2%',desc:'Complex Africa itineraries — monthly measure essential'}],dependsOn:['Cherice Harrell'],dependsNote:''},
+'Rowan Mickleburgh':{rev:2000000,label:'28.2x return on cost',otePct:5,flag:'',metric:'Africa res throughput — $2,000,000 / 110 bookings / $18,200 ABV',how:'Rowan is the highest-paid Africa agent at $65,000 base. Her $2M throughput target matches the other Africa agents — as with Allison Hogan in Oceania, her salary premium should be reflected in above-average conversion and ABV metrics. Nexus data will confirm whether her performance justifies the differential.',note:'At $70,980 total cost against a $2M target, Rowan delivers a 28.2x return — the lowest in the Africa team. Her salary at $65,000 is the highest of the Africa agents. Her individual performance metrics from Nexus should be reviewed at end of Q3 to confirm the salary premium is justified.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,000,000',desc:'$6M Africa total across 3 active agents'},{lbl:'Booking Count Target',val:'110 files/year',desc:'9 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$19,500',desc:'Senior agent — higher ABV expectation of $19,500 vs team avg $18,200'},{lbl:'Upsell Rate Target',val:'42%',desc:'Senior standard — higher upsell expectation'},{lbl:'Quote-to-Book Conversion',val:'65%',desc:'Above team average expected at this salary level'},{lbl:'Balance Clearance',val:'92%',desc:'Senior standard'},{lbl:'Res Error Rate',val:'<1.5%',desc:'Senior standard — lower error tolerance'}],dependsOn:['Cherice Harrell'],dependsNote:''},
+'Sarad Dulal':{rev:2570000,label:'50.9x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Sarad is one of seven active Oceania res agents based in Rego Park, NY. Target framework is consistent with all Oceania agents at this stage.',note:'At $50,492 total cost against a $2.57M target, Sarad delivers a 50.9x return. Nexus integration will allow individual performance tracking for the first time.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'$18M Oceania target across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$14,300',desc:'Standard Oceania product mix'},{lbl:'Upsell Rate Target',val:'35%',desc:'Insurance, upgrades, excursions'},{lbl:'Quote-to-Book Conversion',val:'68%',desc:'Target from quote to confirmed booking'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<2%',desc:'Monthly measure'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:''},
+'Sarah Buckley':{rev:2570000,label:'36.2x return on cost',otePct:5,flag:'',metric:'Oceania res throughput — $2,570,000 / 180 bookings / $14,300 ABV',how:'Sarah is one of the higher-paid Oceania agents at $65,000 base, based in Prince Frederick, MD. Her throughput target matches the team at $2.57M — her salary premium should be reflected in above-average conversion and ABV when Nexus data is available.',note:'At $70,980 total cost against a $2.57M target, Sarah delivers a 36.2x return. At $65,000 base she is one of the two highest-paid Oceania agents alongside Allison Hogan. Nexus data should benchmark her personal ABV and conversion against the team to confirm the salary differential is performance-justified.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,570,000',desc:'$18M Oceania target across 7 active agents'},{lbl:'Booking Count Target',val:'180 files/year',desc:'15 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$15,000',desc:'Senior agent — higher ABV expectation'},{lbl:'Upsell Rate Target',val:'38%',desc:'Higher upsell expectation at this salary level'},{lbl:'Quote-to-Book Conversion',val:'70%',desc:'Above-average conversion expected'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<1.5%',desc:'Senior standard'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:''},
+'Xuwen Feng':{rev:2000000,label:'36.5x return on cost',otePct:5,flag:'',metric:'Asia res throughput — $2,000,000 / 160 bookings / $12,500 ABV',how:'Xuwen is the sole Asia res agent covering Japan, South Korea, Thailand, Bali and Hong Kong. Asia carries a lower ABV than Africa ($12,500 vs $18,200) but higher booking volume. Her $2M target reflects the AOP Asia revenue line with 160 confirmed bookings per year at average $12,500 per file. As the only Asia specialist, she is a key person risk.',note:'At $54,780 total cost against a $2M target, Xuwen delivers a 36.5x return. Her sole-agent status on Asia makes her a key person dependency. The South Korea trade campaign launched June 2026 will increase her inquiry volume — her capacity should be reviewed at end of Q3.',breakdown:[{lbl:'Annual Revenue Throughput',val:'$2,000,000',desc:'Full AOP Asia revenue line — sole Asia res agent'},{lbl:'Booking Count Target',val:'160 files/year',desc:'Approx 13 confirmed bookings per month'},{lbl:'Average Booking Value',val:'$12,500',desc:'Japan, South Korea, Thailand, Bali, Hong Kong product'},{lbl:'Upsell Rate Target',val:'30%',desc:'Travel insurance, excursion packages, accommodation upgrades'},{lbl:'Quote-to-Book Conversion',val:'65%',desc:'Asia decisions are reasonably fast — destination-driven'},{lbl:'Balance Clearance',val:'90%',desc:'30+ days before travel'},{lbl:'Res Error Rate',val:'<2%',desc:'Monthly measure'}],dependsOn:['Lisa Tenerelli-Escover'],dependsNote:'KEY PERSON RISK: Xuwen is the sole Asia res agent. If she is unavailable, TAG has no internal Asia booking capability. As Asia product grows (South Korea campaign June 2026 already live), consideration should be given to a backup Asia-capable agent or cross-training one Oceania agent on Asia product.'},
+'Lisa Tenerelli-Escover':{rev:18000000,label:'165x team throughput overseen',otePct:8,flag:'',metric:'Senior Res Manager — $18M Oceania team throughput accountability',how:'Lisa manages the Oceania res team — 7 active agents each carrying a $2.57M throughput target. Her management accountability covers the full $18M Oceania revenue line. Her KPIs are measured on team performance rather than personal booking counts: average team conversion rate, upsell rate, error rate, balance clearance and staff retention.',note:'At $108,780 total cost, Lisa is the most expensive res team member. Her accountability for $18M of throughput gives a 165x return ratio — the highest in the res function. Her role is a key dependency for the entire Oceania revenue line. Key person risk.',breakdown:[{lbl:'Team Revenue Throughput Overseen',val:'$18,000,000',desc:'7 Oceania agents x $2,570,000 each — Lisa accountable for team delivery'},{lbl:'Team Average Conversion Rate',val:'68%+',desc:'Team average quote-to-booking conversion'},{lbl:'Team Upsell Rate',val:'35%+',desc:'Team average add-on and upgrade attachment rate'},{lbl:'Team Error Rate',val:'<2%',desc:'Monthly team average — fed into Nexus reporting'},{lbl:'Balance Clearance Rate',val:'90%+',desc:'Team average — files cleared 30+ days before travel'},{lbl:'Staff Retention',val:'Target: 0 attrition',desc:'Res team stability is critical to service quality'}],dependsOn:['Kirk Demeter','Kerryn Collins'],dependsNote:'Lisas team targets depend on a consistent flow of qualified leads from the sales team. If Michael Browns consortia activation plan delivers on TLN (2% to 4%), the Oceania inquiry volume increases significantly — Lisas team must be resourced to handle it.'},
+'Cherice Harrell':{rev:8000000,label:'112x team throughput overseen',otePct:8,flag:'',metric:'Res Manager — $8M Africa + Asia + Support team accountability',how:'Cherice manages the Africa and Asia res teams — 3 Africa agents ($2M each = $6M) plus Xuwen on Asia ($2M) plus Christen on support ($1.5M). Her team throughput accountability is approximately $8M. Her KPIs mirror Lisas: team conversion, error rate, balance clearance and agent retention.',note:'At $70,980 total cost against $8M team accountability, Cherice delivers a 112x return ratio. The Africa team is the highest-value per-booking team in the business and Cherice is responsible for its performance. Her salary of $65,000 is appropriate for the scope but should be reviewed as the res team grows.',breakdown:[{lbl:'Africa Team Throughput',val:'$6,000,000',desc:'3 active Africa agents x $2M each'},{lbl:'Asia Team Throughput',val:'$2,000,000',desc:'Xuwen Feng — sole Asia agent'},{lbl:'Support Throughput',val:'$1,500,000',desc:'Christen McGlynn cross-region support'},{lbl:'Team Error Rate',val:'<2%',desc:'Monthly team average'},{lbl:'Balance Clearance Rate',val:'90%+',desc:'Africa and Asia files 30+ days before travel'},{lbl:'Team Upsell Rate',val:'38%+',desc:'Africa carries highest upsell opportunity in the business'}],dependsOn:['Lisa Tenerelli-Escover','Kirk Demeter'],dependsNote:'Cherices Africa team is directly affected by the reconfirmation programme currently underway in the UK. Supplier issues flagged by Ajay and Clinton reduce the amendment workload on her agents. She should be briefed on forward booking issues as they are identified.'},
 };
 
 var currentView = 'dept';
@@ -607,7 +625,7 @@ function renderListView(){
     +'</tr></thead><tbody>'
     +list.map(function(p,i){
       var fullName = p.first+' '+p.last;
-      var rt = revTargets[fullName];
+      var rt = getPersonTarget(fullName);
       var band = salaryBand(p.salary);
       var dc = deptColor(p.dept);
       return '<tr data-person="'+encodeURIComponent(fullName)+'" class="list-person-row" style="'+(i%2===0?'':'background:var(--off)')+'">'
@@ -637,7 +655,7 @@ function listSortBy(col){
 
 function personCard(p){
   var fullName = p.first+' '+p.last;
-  var rt = revTargets[fullName];
+  var rt = getPersonTarget(fullName);
   var band = salaryBand(p.salary);
   var dc = deptColor(p.dept);
   var ini = p.first[0]+p.last[0];
@@ -706,7 +724,12 @@ function openModal(fullName){
         +'</div></div>'
       : '<div style="font-size:12.5px;color:var(--mid);line-height:1.55;margin-bottom:10px">'+rt.metric+'</div>')
     // HOW section
-    +(rt.how?'<div style="font-size:12px;color:var(--mid);line-height:1.65;padding:10px 12px;background:var(--blue-lt);border-radius:7px;margin-bottom:12px">'+rt.how+'</div>':'')
+    +(rt.dynamicRes
+      ? '<div style="font-size:12px;color:var(--navy);line-height:1.65;padding:10px 12px;background:var(--blue-lt);border-radius:7px;margin-bottom:12px">'
+        +'<strong>Based on scenario:</strong> '+rt.resDetail.bpw+' bookings/week × '+rt.resDetail.weeks+' working weeks × $'+rt.resDetail.abv.toLocaleString()+' ABV ('+rt.resDetail.region+')'
+        +'<br><span style="font-size:11px;color:var(--muted)">Click <strong>Res Targets</strong> in the top controls to change these assumptions for all res agents.</span>'
+        +'</div>'
+      : rt.how?'<div style="font-size:12px;color:var(--mid);line-height:1.65;padding:10px 12px;background:var(--blue-lt);border-radius:7px;margin-bottom:12px">'+rt.how+'</div>':'')
     // Breakdown table
     +(rt.breakdown&&rt.breakdown.length?
       '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px">Target Breakdown</div>'
@@ -970,6 +993,154 @@ function updateScenarioBar(){
     aw.style.display = addedPeople.length?'':'none';
     an.textContent = addedPeople.map(function(p){return p.first+' '+p.last;}).join(', ');
   }
+}
+
+
+// ── RES AGENT SCENARIO ENGINE ─────────────────────────────────
+// Default assumptions — all editable by user
+var resScenario = {
+  bookingsPerWeek: 3,
+  workingWeeks: 48,
+  abv: {
+    'Oceania':  14300,
+    'Africa':   18200,
+    'Asia':     12500,
+    'Europe':   15000,
+    'Support':  13000,
+    'Manager':  0,
+    'QC':       0,
+  },
+};
+
+// Map each res person to their region
+var resPersonRegion = {
+  'Adam Dela Roche':        'Oceania',
+  'Allison Hogan':          'Oceania',
+  'Beth Grier':             'Oceania',
+  'Christen McGlynn':       'Support',
+  'Dina Holguin':           'Africa',
+  'Jannie Lopez':           'Oceania',
+  'Kelly Taylor':           'Oceania',
+  'Kim Faucette':           'QC',
+  'Kristin Vincent':        'Europe',
+  'Laura Bugg':             'Oceania',
+  'Nora Gregorian':         'Africa',
+  'Richard Schwartzel':     'Africa',
+  'Rowan Mickleburgh':      'Africa',
+  'Sarad Dulal':            'Oceania',
+  'Sarah Buckley':          'Oceania',
+  'Seth Widdowson':         'Oceania',
+  'Xuwen Feng':             'Asia',
+  'Cherice Harrell':        'Manager',
+  'Lisa Tenerelli-Escover': 'Manager',
+};
+
+function getResTarget(fullName){
+  var region = resPersonRegion[fullName];
+  if(!region) return null;
+  if(region==='Manager' || region==='QC') return null; // handled separately
+  var abv = resScenario.abv[region] || 0;
+  var annualBookings = resScenario.bookingsPerWeek * resScenario.workingWeeks;
+  var rev = annualBookings * abv;
+  return {
+    rev: rev,
+    bookings: annualBookings,
+    abv: abv,
+    region: region,
+    bpw: resScenario.bookingsPerWeek,
+    weeks: resScenario.workingWeeks,
+  };
+}
+
+function showResScenarioEditor(){
+  var modal = document.getElementById('add-person-modal');
+  if(!modal) return;
+  modal.style.display = 'flex';
+
+  var rows = Object.entries(resScenario.abv).filter(function(e){ return e[1]>0; }).map(function(e){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="width:100px;font-size:12.5px;font-weight:600;color:var(--navy)">'+e[0]+'</div>'
+      +'<div style="font-size:11px;color:var(--muted);flex:1">ABV $</div>'
+      +'<input type="number" value="'+e[1]+'" data-region="'+e[0]+'" onchange="updateResABV(this)" style="width:100px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-family:inherit;outline:none">'
+      +'</div>';
+  }).join('');
+
+  modal.innerHTML = '<div class="add-person-modal"><div class="add-person-box" style="max-width:520px">'
+    +'<div class="ap-title">&#127919; Res Agent Target Assumptions</div>'
+    +'<div style="background:var(--blue-lt);border:1px solid #c7d9f5;border-radius:8px;padding:12px 14px;margin-bottom:18px;font-size:12.5px;color:var(--navy);line-height:1.6">'
+    +'All res agent revenue targets are calculated from: <strong>Bookings per week × Working weeks × Average Booking Value (ABV) by region.</strong> Adjust any figure below and all targets update instantly.'
+    +'</div>'
+
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">'
+    +'<div>'
+    +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px">Bookings Per Week</div>'
+    +'<input type="number" id="rse-bpw" value="'+resScenario.bookingsPerWeek+'" min="1" max="10" step="0.5" onchange="resScenario.bookingsPerWeek=parseFloat(this.value)||3;refreshResTargets()" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:16px;font-weight:700;font-family:inherit;outline:none;color:var(--tag)">'
+    +'<div style="font-size:10.5px;color:var(--muted);margin-top:4px">Per agent, per week</div>'
+    +'</div>'
+    +'<div>'
+    +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px">Working Weeks / Year</div>'
+    +'<input type="number" id="rse-weeks" value="'+resScenario.workingWeeks+'" min="40" max="52" onchange="resScenario.workingWeeks=parseInt(this.value)||48;refreshResTargets()" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:16px;font-weight:700;font-family:inherit;outline:none;color:var(--tag)">'
+    +'<div style="font-size:10.5px;color:var(--muted);margin-top:4px">48 = 4 weeks holiday</div>'
+    +'</div>'
+    +'</div>'
+
+    +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Average Booking Value by Region ($)</div>'
+    +'<div style="border:1px solid var(--border);border-radius:8px;padding:0 14px;margin-bottom:18px">'+rows+'</div>'
+
+    +'<div style="background:var(--green-lt);border:1px solid var(--green-bd);border-radius:8px;padding:12px 14px;margin-bottom:16px" id="rse-preview"></div>'
+
+    +'<div class="ap-actions">'
+    +'<button class="ap-cancel" onclick="closeAddPerson()">Close</button>'
+    +'<button class="ap-save" onclick="refreshResTargets();closeAddPerson()">&#10003; Apply & Close</button>'
+    +'</div>'
+    +'</div></div>';
+
+  updateResPreview();
+}
+
+function updateResABV(input){
+  var region = input.getAttribute('data-region');
+  var val = parseInt(input.value)||0;
+  resScenario.abv[region] = val;
+  updateResPreview();
+}
+
+function updateResPreview(){
+  var el = document.getElementById('rse-preview');
+  if(!el) return;
+  var bpw = resScenario.bookingsPerWeek;
+  var wks = resScenario.workingWeeks;
+  var annual = Math.round(bpw * wks);
+  var rows = Object.entries(resScenario.abv).filter(function(e){return e[1]>0;}).map(function(e){
+    return '<div style="display:flex;justify-content:space-between;font-size:11.5px;padding:2px 0">'
+      +'<span style="color:var(--mid)">'+e[0]+'</span>'
+      +'<span style="font-weight:700;color:var(--green)">$'+(Math.round(annual*e[1])).toLocaleString()+'/yr</span>'
+      +'</div>';
+  }).join('');
+  el.innerHTML = '<div style="font-size:10.5px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">&#128202; Live Preview &mdash; '+bpw+' bookings/week × '+wks+' weeks = '+annual+' bookings/year</div>'+rows;
+}
+
+function refreshResTargets(){
+  updateResPreview();
+  render();
+  updateScenarioBar();
+}
+
+// Override getRevTarget to use dynamic res scenario for res people
+var originalRevTargets = revTargets;
+function getPersonTarget(fullName){
+  var resT = getResTarget(fullName);
+  if(resT){
+    var rt = revTargets[fullName]||{};
+    return Object.assign({}, rt, {
+      rev: resT.rev,
+      metric: resT.region+' res throughput — '+resT.bpw+' bookings/week × '+resT.weeks+' weeks × $'+resT.abv.toLocaleString()+' ABV',
+      label: Math.round(resT.rev/1000)+'K target',
+      dynamicRes: true,
+      resDetail: resT,
+    });
+  }
+  return revTargets[fullName]||{rev:0,metric:'Supporting / operational role',label:'enabling role',how:'',note:'',breakdown:[],dependsOn:[],dependsNote:'',otePct:5,flag:''};
 }
 
 // ── LOGIN ─────────────────────────────────────────────────────
