@@ -199,6 +199,36 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(
 .card-scenario-btn.btn-restore:hover{background:var(--green-bd)}
 .card-scenario-btn.btn-add{background:var(--green-lt);border-color:var(--green-bd);color:var(--green)}
 
+
+/* EDIT MODE */
+.edit-mode-bar{background:var(--green);padding:9px 32px;display:none;align-items:center;gap:14px;position:sticky;top:60px;z-index:91}
+.edit-mode-bar.active{display:flex}
+.emb-title{font-size:12px;font-weight:800;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+.emb-hint{font-size:11.5px;color:rgba(255,255,255,.8)}
+.emb-btn{padding:6px 14px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:all .15s}
+.emb-add{background:#fff;color:var(--green)}
+.emb-add:hover{background:var(--green-lt)}
+.emb-done{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);margin-left:auto}
+.emb-done:hover{background:rgba(255,255,255,.3)}
+
+/* Editable fields in cards */
+.edit-field{background:rgba(255,255,255,.9);border:1.5px solid var(--green);border-radius:5px;padding:3px 7px;font-size:12px;font-weight:700;font-family:inherit;width:100%;outline:none;color:var(--ink)}
+.edit-field:focus{box-shadow:0 0 0 3px var(--green-lt)}
+.person-card.edit-active{border-color:var(--green) !important;box-shadow:0 0 0 3px var(--green-lt)}
+
+/* Add person modal */
+.add-person-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
+.add-person-box{background:#fff;border-radius:14px;padding:32px;max-width:480px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.ap-title{font-size:18px;font-weight:800;color:var(--navy);margin-bottom:20px}
+.ap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.ap-field{display:flex;flex-direction:column;gap:5px}
+.ap-field label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.ap-field input,.ap-field select{padding:9px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-family:inherit;outline:none}
+.ap-field input:focus,.ap-field select:focus{border-color:var(--green)}
+.ap-actions{display:flex;gap:10px}
+.ap-save{flex:1;padding:11px;background:var(--green);color:#fff;border:none;border-radius:7px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:inherit}
+.ap-cancel{padding:11px 20px;background:var(--off);border:1px solid var(--border);border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--mid)}
+
 </style>
 </head>
 <body>
@@ -255,6 +285,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(
 
 </div>
 
+<div class="edit-mode-bar" id="edit-mode-bar">
+  <span class="emb-title">&#9998; Edit Mode</span>
+  <span class="emb-hint">Click any salary or name on a card to edit it live. Changes update all totals instantly.</span>
+  <button class="emb-btn emb-add" onclick="showAddPerson()">&#43; Add New Person</button>
+  <button class="emb-btn emb-done" onclick="toggleEditMode()">&#10003; Done Editing</button>
+</div>
+<div id="add-person-modal" style="display:none"></div>
+
 <div class="alerts">
   <div class="alert-title">&#9888; Key Advisory Observations &mdash; Ajay Kawa, ORN</div>
   <div class="alert-items">
@@ -280,6 +318,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(
     <button class="tog" id="f-redundant" onclick="setFilter('redundant',this)">Redundant (8)</button>
   </div>
   <input class="search-box" id="search-box" placeholder="&#128269; Search name, role, dept..." oninput="render()">
+  <button class="tog" id="edit-toggle-btn" onclick="toggleEditMode()" style="margin-left:auto;border-color:var(--green);color:var(--green)">&#9998; Edit Salaries</button>
 </div>
 
 <div class="main">
@@ -386,7 +425,8 @@ function bonusInfo(sal){
 
 function getList(){
   var srch = (document.getElementById('search-box').value||'').toLowerCase();
-  return staffData.filter(function(s){
+  var combined = staffData.concat(customPeople);
+  return combined.filter(function(s){
     if(currentFilter==='active' && s.status!=='active') return false;
     if(currentFilter==='redundant' && s.status!=='redundant') return false;
     if(srch){
@@ -601,14 +641,19 @@ function personCard(p){
   var band = salaryBand(p.salary);
   var dc = deptColor(p.dept);
   var ini = p.first[0]+p.last[0];
-  return '<div class="person-card'+(p.status==='redundant'?' redundant':'')+'" data-person="'+encodeURIComponent(fullName)+'">'
+  var effectiveSal = getEffectiveSalary(fullName, p.salary);
+  var effectiveTotal = getEffectiveTotal(p);
+  return '<div class="person-card'+(p.status==='redundant'?' redundant':'')+(editMode?' edit-active':'')+'" data-person="'+encodeURIComponent(fullName)+'">'
     +(p.status==='redundant'?'<div class="card-redundant-pill">REDUNDANT</div>':'')
     +'<div class="card-avatar" style="background:'+dc+'">'+ini+'</div>'
     +'<div class="card-name">'+p.first+' '+p.last+'</div>'
     +'<div class="card-role">'+p.role+'</div>'
     +'<div class="card-salary-row">'
-    +'<div class="card-salary" style="color:'+band.col+'">$'+p.salary.toLocaleString()+'</div>'
-    +'<div class="card-total">Cost $'+Math.round(p.total).toLocaleString()+'</div>'
+    +(editMode
+      ? '<div style="flex:1"><label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:3px">Base Salary $</label>'
+        +'<input class="edit-field" type="number" data-name="'+encodeURIComponent(fullName)+'" value="'+effectiveSal+'" oninput="onSalaryEdit(decodeURIComponent(this.dataset.name),this)" onclick="event.stopPropagation()"></div>'
+      : '<div class="card-salary" style="color:'+band.col+'">$'+effectiveSal.toLocaleString()+'</div>')
+    +'<div class="card-total edit-total-display">Cost $'+Math.round(effectiveTotal).toLocaleString()+'</div>'
     +'</div>'
     +(rt&&rt.rev?'<div class="card-rev-tag">Target: $'+Math.round(rt.rev/1000)+'K</div>':'')
     +'</div>';
@@ -728,16 +773,128 @@ function render(){
 
 // Proposed new hires from action list
 const proposedHires = [
-  {dept:'Sales',first:'Zoho',last:'Expert',role:'Certified Zoho CRM Specialist',loc:'USA (Remote)',salary:82500,emp_tax:6600,medical:780,total:89880,status:'proposed',note:'Recommended in action list. Essential to implement Zoho CRM correctly first time. Covers CRM build, Campaigns setup, Blueprint configuration and Nexus integration. A generalist setup carries risk of rework. Contractor option available at approx $150/day for implementation phase only.'},
-  {dept:'Marketing',first:'Digital',last:'Marketer',role:'AI-Native Digital Marketer',loc:'USA (Remote)',salary:67500,emp_tax:5400,medical:780,total:73680,status:'proposed',note:'Recommended in action list. 12 months of social media has produced zero measurable enquiries. This hire brings AI-native content and campaign capability in-house permanently, replacing a portion of current agency spend. Maverick Agency contract review should run in parallel to fund this role.'},
+  {dept:'Sales',first:'Zoho',last:'Expert',role:'Certified Zoho CRM Specialist',loc:'USA (Remote)',salary:60000,emp_tax:4800,medical:780,total:65580,status:'proposed',note:'Recommended in action list. Essential to implement Zoho CRM correctly first time. Covers CRM build, Campaigns setup, Blueprint configuration and Nexus integration. A generalist setup carries risk of rework. Contractor option available at approx $150/day for implementation phase only.'},
+  {dept:'Marketing',first:'Digital',last:'Marketer',role:'AI-Native Digital Marketer',loc:'USA (Remote)',salary:60000,emp_tax:4800,medical:780,total:65580,status:'proposed',note:'Recommended in action list. 12 months of social media has produced zero measurable enquiries. This hire brings AI-native content and campaign capability in-house permanently, replacing a portion of current agency spend. Maverick Agency contract review should run in parallel to fund this role.'},
 ];
 
+
+
+// ── EDIT MODE ──────────────────────────────────────────────────
+var editMode = false;
+var customPeople = [];   // people added via Add New Person
+var salaryOverrides = {}; // fullName -> overridden salary
+
+function toggleEditMode(){
+  editMode = !editMode;
+  var bar = document.getElementById('edit-mode-bar');
+  var btn = document.getElementById('edit-toggle-btn');
+  if(bar) bar.className = 'edit-mode-bar' + (editMode?' active':'');
+  if(btn){
+    btn.textContent = editMode ? '&#10003; Exit Edit Mode' : '&#9998; Edit Salaries';
+    btn.style.background = editMode ? 'var(--green)' : '';
+    btn.style.color = editMode ? '#fff' : 'var(--green)';
+  }
+  render();
+}
+
+function getEffectiveSalary(fullName, baseSalary){
+  return salaryOverrides[fullName] !== undefined ? salaryOverrides[fullName] : baseSalary;
+}
+
+function getEffectiveTotal(p){
+  var sal = getEffectiveSalary(p.first+' '+p.last, p.salary);
+  var taxRate = p.emp_tax > 0 ? (p.emp_tax / p.salary) : 0;
+  var tax = Math.round(sal * taxRate);
+  return sal + tax + p.medical;
+}
+
+function onSalaryEdit(fullName, inputEl){
+  var raw = inputEl.value.replace(/[^0-9]/g,'');
+  var val = parseInt(raw)||0;
+  salaryOverrides[fullName] = val;
+  updateScenarioBar();
+  // Update displayed total cost in same card
+  var card = inputEl.closest('[data-person]');
+  if(card){
+    var totalEl = card.querySelector('.edit-total-display');
+    var p = staffData.concat(customPeople).find(function(s){return s.first+' '+s.last===fullName;});
+    if(totalEl && p){
+      var taxRate = p.emp_tax>0?(p.emp_tax/p.salary):0;
+      var tax = Math.round(val * taxRate);
+      var newTotal = val + tax + p.medical;
+      totalEl.textContent = 'Est. cost $'+newTotal.toLocaleString();
+    }
+  }
+}
+
+function showAddPerson(){
+  var modal = document.getElementById('add-person-modal');
+  if(!modal) return;
+  modal.style.display = 'flex';
+  modal.innerHTML = '<div class="add-person-modal"><div class="add-person-box">'
+    +'<div class="ap-title">&#43; Add New Person / Role</div>'
+    +'<div class="ap-grid">'
+    +'<div class="ap-field"><label>First Name</label><input id="ap-first" placeholder="e.g. Sarah"></div>'
+    +'<div class="ap-field"><label>Last Name / Surname</label><input id="ap-last" placeholder="e.g. Johnson"></div>'
+    +'<div class="ap-field" style="grid-column:span 2"><label>Role / Job Title</label><input id="ap-role" placeholder="e.g. Sales Manager"></div>'
+    +'<div class="ap-field"><label>Department</label><select id="ap-dept"><option>Sales</option><option>Res</option><option>Ops</option><option>Leadership</option><option>Finance</option><option>Marketing</option><option>Product</option></select></div>'
+    +'<div class="ap-field"><label>Location</label><input id="ap-loc" placeholder="e.g. Austin, TX"></div>'
+    +'<div class="ap-field"><label>Base Salary ($)</label><input id="ap-salary" type="number" placeholder="e.g. 75000"></div>'
+    +'<div class="ap-field"><label>Emp Tax Rate (%)</label><input id="ap-tax" type="number" placeholder="8" value="8"></div>'
+    +'<div class="ap-field"><label>Medical ($/yr)</label><input id="ap-medical" type="number" placeholder="780" value="780"></div>'
+    +'<div class="ap-field"><label>Status</label><select id="ap-status"><option value="active">Active</option><option value="proposed">Proposed</option></select></div>'
+    +'</div>'
+    +'<div class="ap-actions">'
+    +'<button class="ap-cancel" onclick="closeAddPerson()">Cancel</button>'
+    +'<button class="ap-save" onclick="saveNewPerson()">&#43; Add to Org</button>'
+    +'</div>'
+    +'</div></div>';
+  document.getElementById('ap-first').focus();
+}
+
+function closeAddPerson(){
+  var modal = document.getElementById('add-person-modal');
+  if(modal){ modal.style.display='none'; modal.innerHTML=''; }
+}
+
+function saveNewPerson(){
+  var first = (document.getElementById('ap-first').value||'').trim();
+  var last  = (document.getElementById('ap-last').value||'').trim();
+  var role  = (document.getElementById('ap-role').value||'').trim();
+  var dept  = document.getElementById('ap-dept').value;
+  var loc   = (document.getElementById('ap-loc').value||'').trim();
+  var salary = parseInt(document.getElementById('ap-salary').value)||0;
+  var taxPct = parseFloat(document.getElementById('ap-tax').value)||8;
+  var medical = parseInt(document.getElementById('ap-medical').value)||780;
+  var status = document.getElementById('ap-status').value;
+
+  if(!first||!last||!role||!salary){
+    alert('Please fill in at least first name, last name, role and salary.');
+    return;
+  }
+
+  var tax = Math.round(salary * taxPct / 100);
+  var total = salary + tax + medical;
+
+  customPeople.push({
+    dept:dept, first:first, last:last, role:role, loc:loc,
+    salary:salary, emp_tax:tax, medical:medical, total:total, status:status,
+    isCustom:true
+  });
+
+  closeAddPerson();
+  // Also add to scenario additions so it shows in bar
+  scenarioAdditions[first+' '+last] = true;
+  updateScenarioBar();
+  render();
+}
 
 // ── SCENARIO MODE ──────────────────────────────────────────────
 var scenarioRemovals = {};   // name → true
 var scenarioAdditions = {};  // name → true
 var baseActiveCount = staffData.filter(function(s){return s.status==='active';}).length;
 var baseActiveCost  = staffData.filter(function(s){return s.status==='active';}).reduce(function(s,p){return s+p.total;},0);
+function getCurrentActiveCost(){ return staffData.concat(customPeople).filter(function(s){return s.status==='active'&&!scenarioRemovals[s.first+' '+s.last];}).reduce(function(acc,p){return acc+getEffectiveTotal(p);},0); }
 
 function toggleScenario(fullName, isProposed){
   if(isProposed){
@@ -774,12 +931,12 @@ function updateScenarioBar(){
     return scenarioAdditions[s.first+' '+s.last];
   });
 
-  var removedCost = removedPeople.reduce(function(s,p){return s+p.total;},0);
-  var addedCost   = addedPeople.reduce(function(s,p){return s+p.total;},0);
+  var removedCost = removedPeople.reduce(function(s,p){return s+getEffectiveTotal(p);},0);
+  var addedCost   = addedPeople.reduce(function(s,p){return s+getEffectiveTotal(p);},0);
 
-  var activeBase = staffData.filter(function(s){return s.status==='active' && !scenarioRemovals[s.first+' '+s.last];});
+  var activeBase = staffData.concat(customPeople).filter(function(s){return s.status==='active' && !scenarioRemovals[s.first+' '+s.last];});
   var currentCount = activeBase.length + addedPeople.length;
-  var currentCost  = activeBase.reduce(function(s,p){return s+p.total;},0) + addedCost;
+  var currentCost  = activeBase.reduce(function(s,p){return s+getEffectiveTotal(p);},0) + addedCost;
   var delta = currentCost - baseActiveCost;
 
   var bar = document.getElementById('scenario-bar');
