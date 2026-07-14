@@ -680,7 +680,7 @@ function personCard(p){
 function openModal(fullName){
   var p = staffData.find(function(s){ return s.first+' '+s.last===fullName; });
   if(!p) return;
-  var rt = revTargets[fullName]||{rev:0,metric:'Supporting / operational role',label:'enabling role'};
+  var rt = getPersonTarget(fullName);
   var band = salaryBand(p.salary);
   var dc = deptColor(p.dept);
   var bonus = bonusInfo(p.salary);
