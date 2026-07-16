@@ -1434,7 +1434,7 @@ function buildSnapshot(){
     resRegions: resPersonRegion,
     savedBy: currentUser,
     savedAt: new Date().toISOString(),
-    v: 2
+    v: 3
   };
 }
 
@@ -1453,10 +1453,19 @@ function applySnapshot(snap){
     resScenario.bookingsPerWeek = snap.resScenario.bookingsPerWeek || resScenario.bookingsPerWeek;
     resScenario.workingWeeks = snap.resScenario.workingWeeks || resScenario.workingWeeks;
     if(snap.resScenario.abv) Object.assign(resScenario.abv, snap.resScenario.abv);
+    resScenario.fixed = Object.assign({ 'Groups':2500000, 'Air':2000000 }, resScenario.fixed||{}, snap.resScenario.fixed||{});
   }
+  // Guarantee every default region ABV exists even in older saves
+  var _defAbv = { 'Oceania':14300, 'Africa':18200, 'Asia':12500, 'Europe':15000, 'Support':13000 };
+  Object.keys(_defAbv).forEach(function(k){ if(!resScenario.abv[k]) resScenario.abv[k]=_defAbv[k]; });
   if(snap.resRegions){
     Object.keys(resPersonRegion).forEach(function(k){ delete resPersonRegion[k]; });
     Object.assign(resPersonRegion, snap.resRegions);
+  }
+  // v3 migration: assign the Ops-Air pair to the new Air category once
+  if((snap.v||2) < 3){
+    if(resPersonRegion['Anima Shakya']===undefined) resPersonRegion['Anima Shakya']='Air';
+    if(resPersonRegion['Laura Miranda']===undefined) resPersonRegion['Laura Miranda']='Air';
   }
   lastSavedMeta = { by: snap.savedBy, at: snap.savedAt };
   return true;
@@ -1661,6 +1670,24 @@ function showEditPerson(fullName){
       +'<option value="redundant"'+(p.status==='redundant'?' selected':'')+'>Redundant</option>'
     +'</select></div>'
     +'<div class="ap-field" style="grid-column:span 2"><label>Reports To</label><select id="ep-reports">'+reportsToOptions(fullName, p.reportsTo||'')+'</select></div>'
+    +'<div class="ap-field" style="grid-column:span 2"><label>Target Category (drives automatic revenue target)</label><select id="ep-region">'
+      +(function(){
+        var cur = resPersonRegion[fullName]||'';
+        var cats = [
+          ['','— None (static / manual target only) —'],
+          ['Oceania','Oceania — bookings × ABV'],
+          ['Africa','Africa — bookings × ABV'],
+          ['Asia','Asia — bookings × ABV'],
+          ['Europe','Europe — bookings × ABV'],
+          ['Support','Res Support — bookings × ABV'],
+          ['Groups','Groups — fixed annual target'],
+          ['Air','Air — fixed annual target'],
+          ['Manager','Manager — team accountability (no auto target)'],
+          ['QC','Docs / QC — quality role (no auto target)']
+        ];
+        return cats.map(function(c){ return '<option value="'+c[0]+'"'+(c[0]===cur?' selected':'')+'>'+c[1]+'</option>'; }).join('');
+      })()
+    +'</select></div>'
     +'<div class="ap-field" style="grid-column:span 2"><label>Description / Notes</label><textarea id="ep-notes" placeholder="Role description, performance notes, review comments...">'+esc(p.notes)+'</textarea></div>'
     +'</div>'
     +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:16px 0 8px">Revenue Target &mdash; manual override (optional)</div>'
@@ -1713,6 +1740,11 @@ function saveEditPerson(encName){
   p.status = document.getElementById('ep-status').value;
   p.reportsTo = document.getElementById('ep-reports').value;
   p.notes = (document.getElementById('ep-notes').value||'').trim();
+  var regionSel = document.getElementById('ep-region');
+  if(regionSel){
+    if(regionSel.value) resPersonRegion[newName] = regionSel.value;
+    else delete resPersonRegion[newName];
+  }
   delete salaryOverrides[newName];
   // Revenue target override — blank figure reverts to automatic
   var revRaw = (document.getElementById('ep-rev').value||'').trim();
@@ -1920,12 +1952,139 @@ function renderOrgView(){
     +'<div class="org-wrap">'+treeHtml+extraHtml+'</div>';
 }
 
+/* ── RES ENGINE v3 — Europe/ABV defaults, fixed Groups & Air targets ── */
+var RES_DEFAULT_ABV = { 'Oceania':14300, 'Africa':18200, 'Asia':12500, 'Europe':15000, 'Support':13000, 'Manager':0, 'QC':0 };
+var RES_FIXED_DEFAULTS = { 'Groups':2500000, 'Air':2000000 };
+Object.keys(RES_DEFAULT_ABV).forEach(function(k){ if(resScenario.abv[k]===undefined) resScenario.abv[k]=RES_DEFAULT_ABV[k]; });
+resScenario.fixed = resScenario.fixed || Object.assign({}, RES_FIXED_DEFAULTS);
+if(resPersonRegion['Anima Shakya']===undefined) resPersonRegion['Anima Shakya']='Air';
+if(resPersonRegion['Laura Miranda']===undefined) resPersonRegion['Laura Miranda']='Air';
+
+function resetResDefaults(){
+  resScenario.bookingsPerWeek = 3;
+  resScenario.workingWeeks = 48;
+  resScenario.abv = Object.assign({}, RES_DEFAULT_ABV);
+  resScenario.fixed = Object.assign({}, RES_FIXED_DEFAULTS);
+  markDirty();
+  closeAddPerson();
+  showResScenarioEditor();
+  render();
+  showToast('Res target assumptions reset to original defaults', 'ok');
+}
+
+function updateResFixed(input){
+  var region = input.getAttribute('data-fixed');
+  resScenario.fixed[region] = parseInt(input.value)||0;
+  markDirty();
+  updateResPreview();
+}
+
+var _origUpdateResABV = updateResABV;
+updateResABV = function(input){ _origUpdateResABV(input); markDirty(); };
+var _origRefreshResTargets = refreshResTargets;
+refreshResTargets = function(){ markDirty(); _origRefreshResTargets(); };
+
+/* Editor: ABV rows + fixed-target rows + reset button */
+function showResScenarioEditor(){
+  var modal = document.getElementById('add-person-modal');
+  if(!modal) return;
+  modal.style.display = 'flex';
+
+  var rows = Object.entries(resScenario.abv).filter(function(e){ return e[1]>0; }).map(function(e){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="width:100px;font-size:12.5px;font-weight:600;color:var(--navy)">'+e[0]+'</div>'
+      +'<div style="font-size:11px;color:var(--muted);flex:1">ABV $</div>'
+      +'<input type="number" value="'+e[1]+'" data-region="'+e[0]+'" onchange="updateResABV(this)" style="width:100px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-family:inherit;outline:none">'
+      +'</div>';
+  }).join('');
+
+  var fixedRows = Object.entries(resScenario.fixed).map(function(e){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="width:100px;font-size:12.5px;font-weight:600;color:var(--navy)">'+e[0]+'</div>'
+      +'<div style="font-size:11px;color:var(--muted);flex:1">Fixed annual target $ / person</div>'
+      +'<input type="number" value="'+e[1]+'" data-fixed="'+e[0]+'" onchange="updateResFixed(this)" style="width:120px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-family:inherit;outline:none">'
+      +'</div>';
+  }).join('');
+
+  modal.innerHTML = '<div class="add-person-modal"><div class="add-person-box" style="max-width:560px;max-height:90vh;overflow-y:auto">'
+    +'<div class="ap-title">&#127919; Res Agent Target Assumptions</div>'
+    +'<div style="background:var(--blue-lt);border:1px solid #c7d9f5;border-radius:8px;padding:12px 14px;margin-bottom:18px;font-size:12.5px;color:var(--navy);line-height:1.6">'
+    +'Destination targets are calculated from: <strong>Bookings per week × Working weeks × Average Booking Value (ABV) by region.</strong> Groups and Air use a <strong>fixed annual figure per person</strong> instead. Adjust anything below and all targets update instantly — press <strong>Save Changes</strong> afterwards to keep it.'
+    +'</div>'
+
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">'
+    +'<div>'
+    +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px">Bookings Per Week</div>'
+    +'<input type="number" id="rse-bpw" value="'+resScenario.bookingsPerWeek+'" min="1" max="10" step="0.5" onchange="resScenario.bookingsPerWeek=parseFloat(this.value)||3;refreshResTargets()" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:16px;font-weight:700;font-family:inherit;outline:none;color:var(--tag)">'
+    +'<div style="font-size:10.5px;color:var(--muted);margin-top:4px">Per agent, per week</div>'
+    +'</div>'
+    +'<div>'
+    +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px">Working Weeks / Year</div>'
+    +'<input type="number" id="rse-weeks" value="'+resScenario.workingWeeks+'" min="40" max="52" onchange="resScenario.workingWeeks=parseInt(this.value)||48;refreshResTargets()" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:16px;font-weight:700;font-family:inherit;outline:none;color:var(--tag)">'
+    +'<div style="font-size:10.5px;color:var(--muted);margin-top:4px">48 = 4 weeks holiday</div>'
+    +'</div>'
+    +'</div>'
+
+    +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Average Booking Value by Region ($)</div>'
+    +'<div style="border:1px solid var(--border);border-radius:8px;padding:0 14px;margin-bottom:18px">'+rows+'</div>'
+
+    +'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Fixed Annual Targets ($)</div>'
+    +'<div style="border:1px solid var(--border);border-radius:8px;padding:0 14px;margin-bottom:18px">'+fixedRows+'</div>'
+
+    +'<div style="background:var(--green-lt);border:1px solid var(--green-bd);border-radius:8px;padding:12px 14px;margin-bottom:16px" id="rse-preview"></div>'
+
+    +'<div class="ap-actions">'
+    +'<button class="ap-danger" onclick="resetResDefaults()">&#8635; Reset to Defaults</button>'
+    +'<button class="ap-cancel" onclick="closeAddPerson()">Close</button>'
+    +'<button class="ap-save" onclick="refreshResTargets();closeAddPerson()">&#10003; Apply &amp; Close</button>'
+    +'</div>'
+    +'</div></div>';
+
+  updateResPreview();
+}
+
+function updateResPreview(){
+  var el = document.getElementById('rse-preview');
+  if(!el) return;
+  var bpw = resScenario.bookingsPerWeek;
+  var wks = resScenario.workingWeeks;
+  var annual = Math.round(bpw * wks);
+  var rows = Object.entries(resScenario.abv).filter(function(e){return e[1]>0;}).map(function(e){
+    return '<div style="display:flex;justify-content:space-between;font-size:11.5px;padding:2px 0">'
+      +'<span style="color:var(--mid)">'+e[0]+'</span>'
+      +'<span style="font-weight:700;color:var(--green)">$'+(Math.round(annual*e[1])).toLocaleString()+'/yr</span>'
+      +'</div>';
+  }).join('');
+  var fixedRows = Object.entries(resScenario.fixed).map(function(e){
+    return '<div style="display:flex;justify-content:space-between;font-size:11.5px;padding:2px 0">'
+      +'<span style="color:var(--mid)">'+e[0]+' <span style="font-size:9.5px;color:var(--muted)">(fixed)</span></span>'
+      +'<span style="font-weight:700;color:var(--green)">$'+(e[1]||0).toLocaleString()+'/yr</span>'
+      +'</div>';
+  }).join('');
+  el.innerHTML = '<div style="font-size:10.5px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">&#128202; Live Preview &mdash; '+bpw+' bookings/week × '+wks+' weeks = '+annual+' bookings/year</div>'+rows+fixedRows;
+}
+
 /* ── MANUAL TARGET OVERRIDES beat the dynamic res engine ── */
 var _origGetPersonTarget = getPersonTarget;
 getPersonTarget = function(fullName){
   if(revTargets[fullName] && revTargets[fullName].manual){
     var rt = revTargets[fullName];
     return Object.assign({rev:0,metric:'',label:Math.round((rt.rev||0)/1000)+'K target (manual)',how:'',note:'',breakdown:[],dependsOn:[],dependsNote:'',otePct:rt.otePct||5,flag:rt.flag||''}, rt);
+  }
+  var region = resPersonRegion[fullName];
+  if(region && resScenario.fixed && resScenario.fixed[region]!==undefined){
+    var rev = resScenario.fixed[region]||0;
+    var base = revTargets[fullName]||{};
+    return Object.assign({note:'',breakdown:[],dependsOn:[],dependsNote:'',otePct:5,flag:''}, base, {
+      rev: rev,
+      metric: region+' — fixed annual target of $'+rev.toLocaleString()+' per person',
+      label: Math.round(rev/1000)+'K target',
+      how: (region==='Groups'
+        ? 'Group series, escorted and MICE bookings. Set as a fixed annual figure per person rather than the bookings × ABV calculation — group files are fewer, larger and lumpier than FIT bookings. '
+        : 'Air / flight bookings and ticketing supporting all destination regions. Set as a fixed annual figure per person rather than the bookings × ABV calculation. ')
+        +'The figure is editable in the Res Targets panel.',
+      dynamicRes: false
+    });
   }
   return _origGetPersonTarget(fullName);
 };
